@@ -1,1 +1,2 @@
 idea1: ai humanizer detection
+idea2: gpt-based text messages summary
