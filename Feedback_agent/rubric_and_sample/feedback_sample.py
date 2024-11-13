@@ -1,5 +1,6 @@
 # Used for few shot prompting
 # Unsure with which few shot to use from
+# samples taken from https://huggingface.co/datasets/chillies/IELTS-writing-task-2-evaluation/tree/main
 
 few_shot_1 = """## Task Achievement:
 - The candidate has adequately addressed the prompt by discussing two causes and potential solutions for bullying in schools.
