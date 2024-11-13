@@ -40,8 +40,6 @@ This is meant to assess the range of grammar you use and how accurately and appr
 # “Ielts writing band scores canada,” IDP IELTS Canada, https://ielts.idp.com/canada/results/scores/writing. 
 
 BAND_SCORE = """
-Band Scores:
-
 **Band 9**
 - Task response
 The prompt is appropriately addressed and explored in depth.
@@ -249,5 +247,4 @@ No rateable language is evident.
 
 **Band 0**
 Should only be used where a candidate did not attend or attempt the question in any way, used a language other than English, or where there is proof that a candidate’s answer has been totally memorised.
-
 """
