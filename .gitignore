@@ -2,3 +2,5 @@
 model/band_score_result.csv
 Feedback_agent/__pycache__/IELTS_rubrics.cpython-310.pyc
 Feedback_agent/__pycache__/prompt_feedback_generation.cpython-310.pyc
+Feedback_agent/rubric_and_sample/__pycache__/feedback_sample.cpython-310.pyc
+Feedback_agent/rubric_and_sample/__pycache__/IELTS_rubrics.cpython-310.pyc
