@@ -3,12 +3,12 @@ import prompt_feedback_generation as p
 from openai import OpenAI
 import pandas as pd 
 
-def main(mode="normal"):
-    mode_list = ["normal", "debug_1", "debug_5"]
+def main(mode="partial", num=15, CoT=False, few_shot=False):
+    mode_list = ["full", "partial", "debug_1", "debug_5"]
     if mode not in mode_list:
         print("Invalid mode passed")
         return None
-
+    
     # there is no training and validation involved
     # I simply want to use the two files, and the name is only to make them distinct
     train_path = "../data/dataset/processed/train.csv"
@@ -20,6 +20,8 @@ def main(mode="normal"):
         df = df.iloc[[0]]
     elif(mode == "debug_5"):
         df = df[1:6]
+    elif(mode == "partial"):
+        df = df[:num]
 
     question_list = df["prompt"]
     essay_list = df["essay"]
@@ -28,7 +30,7 @@ def main(mode="normal"):
     client = OpenAI()
     for (q, e) in zip(question_list, essay_list):
         user_content = p.create_user_prompt(q,e)
-        system_content = p.create_system_prompt()
+        system_content = p.create_system_prompt(CoT=CoT, few_shot=few_shot)
         completion = client.chat.completions.create(
             model="gpt-4o", 
             messages=[
@@ -51,9 +53,20 @@ def main(mode="normal"):
     df['feedback'] = feedback_df['feedback']
 
     # export file current directory
-    df.to_csv('./feedback.csv', index=False, encoding='utf-8', mode="w")
+    export_path = "./generator_result/feedback"
+
+    if CoT: 
+        export_path += f"_CoT"
+
+    if few_shot:
+        export_path += f"_FewShot"
+
+    df.to_csv(f"{export_path}.csv", index=False, encoding='utf-8', mode="w")
     return None
 
 
 if __name__ == "__main__":
-    main("debug_1")
+    main("partial", CoT=False, few_shot=False)
+    main("partial", CoT=True, few_shot=False)
+    main("partial", CoT=False, few_shot=True)
+    main("partial", CoT=True, few_shot=True)
