@@ -4,3 +4,10 @@ Feedback_agent/__pycache__/IELTS_rubrics.cpython-310.pyc
 Feedback_agent/__pycache__/prompt_feedback_generation.cpython-310.pyc
 Feedback_agent/rubric_and_sample/__pycache__/feedback_sample.cpython-310.pyc
 Feedback_agent/rubric_and_sample/__pycache__/IELTS_rubrics.cpython-310.pyc
+model/trained_model_classifier/trained_model/merges.txt
+model/trained_model_classifier/trained_model/config.json
+model/trained_model_classifier/trained_model/model.safetensors
+model/trained_model_classifier/trained_model/special_tokens_map.json
+model/trained_model_classifier/trained_model/tokenizer.json
+model/trained_model_classifier/trained_model/tokenizer_config.json
+model/trained_model_classifier/trained_model/vocab.json
