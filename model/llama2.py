@@ -25,7 +25,7 @@ from torch.cuda.amp import autocast
 
 
 class CustomDataset(Dataset):
-    def __init__(self, data, tokenizer, max_length=512):
+    def __init__(self, data, tokenizer, max_length=2048):
         self.data = data
         self.tokenizer = tokenizer
         self.max_length = max_length
