@@ -3,7 +3,7 @@ import prompt_feedback_generation as p
 from openai import OpenAI
 import pandas as pd 
 
-def main(mode="partial", num=15, CoT=False, few_shot=False):
+def main(mode="partial", num=15, basic_rubric=True, criteria=True, band_score=True, CoT=False, few_shot=False):
     mode_list = ["full", "partial", "debug_1", "debug_5"]
     if mode not in mode_list:
         print("Invalid mode passed")
@@ -30,7 +30,7 @@ def main(mode="partial", num=15, CoT=False, few_shot=False):
     client = OpenAI()
     for (q, e) in zip(question_list, essay_list):
         user_content = p.create_user_prompt(q,e)
-        system_content = p.create_system_prompt(CoT=CoT, few_shot=few_shot)
+        system_content = p.create_system_prompt(basic_rubric=basic_rubric, criteria=criteria, band_score=band_score, CoT=CoT, few_shot=few_shot)
         completion = client.chat.completions.create(
             model="gpt-4o", 
             messages=[
@@ -51,7 +51,7 @@ def main(mode="partial", num=15, CoT=False, few_shot=False):
     # for human evaluators, the program exports
     feedback_df = pd.DataFrame({"feedback": feedback_list})
     df['feedback'] = feedback_df['feedback']
-
+    
     # export file current directory
     export_path = "./generator_result/feedback"
 
@@ -66,7 +66,8 @@ def main(mode="partial", num=15, CoT=False, few_shot=False):
 
 
 if __name__ == "__main__":
-    main("partial", CoT=False, few_shot=False)
+    main("debug_1", band_score=False)
+    '''main("partial", CoT=False, few_shot=False)
     main("partial", CoT=True, few_shot=False)
     main("partial", CoT=False, few_shot=True)
-    main("partial", CoT=True, few_shot=True)
+    main("partial", CoT=True, few_shot=True)'''
