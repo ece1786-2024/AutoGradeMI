@@ -1,0 +1,5 @@
+idea1: ai humanizer detection
+idea2: gpt-based text messages summary
+idea3: ai story generation + story classification
+idea4: CrossCheck
+idea5: IELTS score
