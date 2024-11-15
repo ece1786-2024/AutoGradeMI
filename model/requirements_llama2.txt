@@ -1,5 +1,3 @@
 sentencepiece
 protobuf
 bitsandbytes
-二哥，cuda out of memory的话调一下里面的max length，
-但不能太少，因为这会把后面的essay截断，看看有没有解决办法
