@@ -54,8 +54,8 @@ def get_response(role_prompt, topic, essay, conversation_history):
 
 # Main function to process feedback until it is marked as 'good'
 def generate_feedback(topic, essay):
-    log_file_path = "conversations_log.txt"
-    # log_file_path = "conversations_log_progress_report.txt"
+    # log_file_path = "conversations_log.txt"
+    log_file_path = "conversations_log_progress_report.txt"
 
     if not topic.strip():
         raise ValueError("The topic is empty. Please provide a valid topic.")
