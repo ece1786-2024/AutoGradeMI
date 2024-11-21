@@ -17,7 +17,10 @@ def get_score_prompt_version(topic, essay):
     Student Essay: {essay}
 
     Here is an IELTS rubric for your reference: 
-    Rubric: {rubric}
+    Rubric: 
+    {rubric.BASIC_RUBRIC}
+    {rubric.CRITERIA}
+    {rubric.BAND_SCORE}
 
     Please output the score of the essay in the form of 'score of the essay'. Please output the score directly.
     """
@@ -44,9 +47,13 @@ def generate_sample_essay(topic, essay, feedback, predicted_grade, desired_grade
     Desired Score: {desired_grade}
 
     Here is an IELTS rubric for your reference: 
-    Rubric: {rubric}
+    Rubric: 
+    {rubric.BASIC_RUBRIC}
+    {rubric.CRITERIA}
+    {rubric.BAND_SCORE}
 
-    Please consider the feedback carefully and the sample essay should cover the arguments introduced in the student's essay. 
+    Please consider the feedback carefully and the sample essay should cover the arguments introduced in the student's essay.
+    Please ONLY output the sample essay. 
     """
     print("Generating essay ...... \n")
     response = client.chat.completions.create(
@@ -69,11 +76,11 @@ def main(mode="auto"):
         feedback_path = "../Feedback_agent/Generator_merged/feedback.csv"
         df = pd.read_csv(feedback_path, encoding='utf-8')
 
-        topic = df["topic"][0]
-        essay = df["essay"][0]
-        feedback = df["feedback"][0]
-        predicted_grade = df["predicted"][0]
-        desired_grade = df["desired"][0]
+        topic = df["topic"]
+        essay = df["essay"]
+        feedback = df["feedback"]
+        predicted_grade = df["predicted"]
+        desired_grade = df["desired"]
     else:
         topic = input("Enter the writing question/topic: ")
         essay  = input("Enter the student's essay: ")
@@ -81,28 +88,45 @@ def main(mode="auto"):
         predicted_grade = input("Enter the predicted grade: ")
         desired_grade = input("Enter your desired grade: ")
 
+        topic = list(topic)
+        essay = list(essay)
+        feedback = list(feedback)
+        predicted_grade = list(predicted_grade)
+        desired_grade = list(desired_grade)
+
     # input check
-    pred_status = check_score_input(predicted_grade)
-    desired_grade_status = check_score_input(desired_grade)
-    if(pred_status is False or desired_grade_status is False):
-        print("The given score does not follow IELTS grading band score standards\n")
-        return None
-    if(predicted_grade > desired_grade):
-        print("predicted score is already higher that desired grade, abort!\n")
-        return None
+    sample_score_list = []
+    sample_essay_list = []
+    print("generating essays ..... \n")
+    for (q, e, f, ps, ds) in zip(topic, essay, feedback, predicted_grade, desired_grade):
+        pred_status = check_score_input(ps)
+        desired_grade_status = check_score_input(ds)
+        if(pred_status is False or desired_grade_status is False):
+            print("The given score does not follow IELTS grading band score standards\n")
+            return None
+        if(ps > ds):
+            print("predicted score is already higher that desired grade, abort!\n")
+            return None
 
-    sample_score = 0.0
-    i = 0
-    while float(sample_score) < float(desired_grade) and i < 4:
-        # double check this loop, seems a bit dangerous
-        sample_essay = generate_sample_essay(topic, essay, feedback, predicted_grade, desired_grade)
-        sample_score = get_score_prompt_version(topic, sample_essay)
-        i += 1
+        sample_score = 0.0
+        sample_essay = ""
+        appended = False
+        i = 0
+        while i < 3:
+            # double check this loop, seems a bit dangerous
+            sample_essay = generate_sample_essay(q, e, f, ps, ds)
+            sample_score = get_score_prompt_version(q, sample_essay)
+            if float(sample_score) >= float(ds):
+                sample_essay_list.append(sample_essay)
+                sample_score_list.append(sample_score)
+                appended = True
+                break
+            i += 3
 
-    print("Sampled Essay: \n")
-    print(sample_essay)
-    print("Sampled Score: \n")
-    print(sample_score)
+        if appended is False:
+            # just append the latest
+            sample_essay_list.append(sample_essay)
+            sample_score_list.append(sample_score)
 
     # export result
     # Export feedback to csv
@@ -112,13 +136,17 @@ def main(mode="auto"):
     export_dict["desired"] = desired_grade
     export_dict["feedback"] = feedback
     export_dict["essay"] = essay
-    export_dict["sample_essay"] = sample_essay
+    export_dict["sample_essay"] = sample_essay_list
+    export_dict["sample_score"] = sample_score_list
     
 
-    df = pd.DataFrame(export_dict, index=[0])
+    df = pd.DataFrame(export_dict)
     df.to_csv("./sample_essay.csv", index=False, encoding='utf-8', mode='w')
+    print("DONE!!!")
     return None
 
 
 if __name__ == "__main__":
-    main()
+    # two mode: auto or other
+    # other means user input option
+    main(mode="auto")

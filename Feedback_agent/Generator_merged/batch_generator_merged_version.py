@@ -30,7 +30,10 @@ def generate_feedback(topic, essay, predicted_score, desired_score):
     Desired Score: {desired_score}
 
     Here is an IELTS Rubric for your reference:
-    Rubric: {rubric}
+    Rubric: 
+    {rubric.BASIC_RUBRIC}
+    {rubric.CRITERIA}
+    {rubric.BAND_SCORE}
 
     The feedback should address the following criteria:
     - Clarity: Feedback should be easy to understand and avoid ambiguous language.
@@ -49,20 +52,32 @@ def generate_feedback(topic, essay, predicted_score, desired_score):
     )
     return response.choices[0].message.content
 
-def main():
+def main(mode='auto'):
     # Get user input
-    topic = input("Enter the writing question/topic: ")
-    essay = input("Enter the student's essay: ")
-    predicted_score = input("Enter the predicted score (e.g., 6.0): ")
-    desired_score = input("Enter the desired score (e.g., 7.0): ")
+    if(mode == "auto"):
+        path = "../../data/dataset/processed/selected.csv"
+        df = pd.read_csv(path, encoding='utf-8')
+
+        topic = df["prompt"]
+        essay = df["essay"]
+        predicted_score = df["band"]
+        desired_score = [8] * len(df["prompt"])
+    else:
+        topic = input("Enter the writing question/topic: ")
+        essay = input("Enter the student's essay: ")
+        predicted_score = input("Enter the predicted score (e.g., 6.0): ")
+        desired_score = input("Enter the desired score (e.g., 7.0): ")
+
+        topic = list(topic)
+        essay = list(essay)
+        predicted_score = list(predicted_score)
+        desired_score = list(desired_score)
     
     # Generate feedback
     print("\nGenerating feedback, please wait...")
-    feedback = generate_feedback(topic, essay, predicted_score, desired_score)
-    
-    # Display feedback
-    print("\n--- Feedback ---")
-    print(feedback)
+    feedback = []
+    for (q,e,ps,ds) in zip(topic, essay, predicted_score, desired_score):
+        feedback.append(generate_feedback(q, e, ps, ds))
 
     # Export feedback to csv
     export_dict = dict()
@@ -72,8 +87,9 @@ def main():
     export_dict["desired"] = desired_score
     export_dict["feedback"] = feedback
 
-    df = pd.DataFrame(export_dict, index=[0])
+    df = pd.DataFrame(export_dict)
     df.to_csv("./feedback.csv", index=False, encoding='utf-8', mode='w')
+    print("DONE!!!!\n")
 
 if __name__ == "__main__":
-    main()
+    main(mode="auto")
