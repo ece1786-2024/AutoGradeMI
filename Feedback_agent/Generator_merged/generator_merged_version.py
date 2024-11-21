@@ -1,10 +1,12 @@
 from openai import OpenAI
 import sys
 import os
+import pandas as pd
 
 # Include the path to the rubric and samples
-sys.path.append(os.path.abspath("rubric_and_sample"))
-import IELTS_rubrics as rubric
+sys.path.append(os.path.abspath(".."))
+from rubric_and_sample import IELTS_rubrics as rubric
+# import rubric_and_sample.IELTS_rubrics as rubric
 
 # Initialize OpenAI client
 client = OpenAI()
@@ -61,6 +63,17 @@ def main():
     # Display feedback
     print("\n--- Feedback ---")
     print(feedback)
+
+    # Export feedback to csv
+    export_dict = dict()
+    export_dict["topic"] = topic
+    export_dict["essay"] = essay
+    export_dict["predicted"] = predicted_score
+    export_dict["desired"] = desired_score
+    export_dict["feedback"] = feedback
+
+    df = pd.DataFrame(export_dict, index=[0])
+    df.to_csv("./feedback.csv", index=False, encoding='utf-8', mode='w')
 
 if __name__ == "__main__":
     main()
