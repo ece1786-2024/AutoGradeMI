@@ -38,6 +38,8 @@ def process_essay(topic: str, essay: str, desired_score: float):
         sample_score = grader_agent.get_score_prompt_version_RAG(topic, sample_essay)
         if float(sample_score) >= float(desired_score):
             break
+        if i == 9:
+            sample_essay = "Sorry, we cannot generate a sample essay that meets the desired score base on your essay. Please continue keep on practicing. Good luck!"
         
     # Output grade
     if '<4' in predicted_score:
