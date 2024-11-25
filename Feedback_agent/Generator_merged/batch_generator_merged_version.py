@@ -2,11 +2,14 @@ from openai import OpenAI
 import sys
 import os
 import pandas as pd
+from pathlib import Path
 
-# Include the path to the rubric and samples
-sys.path.append(os.path.abspath(".."))
+current_file = Path(__file__).resolve()
+rubric_path = current_file.parent.parent
+sys.path.append(str(rubric_path))
+
+# Now you can import the IELTS_rubrics module
 from rubric_and_sample import IELTS_rubrics as rubric
-# import rubric_and_sample.IELTS_rubrics as rubric
 
 # Initialize OpenAI client
 client = OpenAI()
