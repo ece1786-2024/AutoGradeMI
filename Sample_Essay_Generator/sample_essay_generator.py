@@ -55,7 +55,8 @@ def generate_sample_essay(topic, essay, feedback, predicted_grade, desired_grade
     Please consider the feedback carefully and the sample essay should cover the arguments introduced in the student's essay.
     Please ONLY output the sample essay. 
     """
-    print("Generating essay ...... \n")
+    
+    #print("Generating essay ...... \n")
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
