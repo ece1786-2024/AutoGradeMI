@@ -1,25 +1,19 @@
-import os
 import sys
 import pandas as pd
 from openai import OpenAI
 import numpy as np
 import json
 import faiss
+from pathlib import Path
 
-sys.path.append(os.path.abspath(".."))
-from Feedback_agent.rubric_and_sample import IELTS_rubrics as rubric
+current_file = Path(__file__).resolve()
+rubric_path = current_file.parent.parent / "Feedback_agent"
+sys.path.append(str(rubric_path))
+
+# Now you can import the IELTS_rubrics module
+from rubric_and_sample import IELTS_rubrics as rubric
 
 client = OpenAI()
-
-feedback_path = "./sample_essay.csv"
-df = pd.read_csv(feedback_path, encoding='utf-8')
-
-topic = df["topic"]
-essay = df["essay"]
-feedback = df["feedback"]
-predicted_grade = df["predicted"]
-desired_grade = df["desired"]
-sample_grade = df["sample_score"]
 
 def generate_embedding(text, model="text-embedding-ada-002"):
     try:
@@ -29,10 +23,12 @@ def generate_embedding(text, model="text-embedding-ada-002"):
         print(f"Error generating embedding")
         return None
     
-#index = faiss.read_index("../RAG/faiss_index_train.bin")
-index = faiss.read_index("../RAG/faiss_index_train_topics.bin")
-#with open("../RAG/embeddings_dataset_train.json", "r", encoding="utf-8") as f:
-with open("../RAG/embeddings_dataset_train_topics.json", "r", encoding="utf-8") as f:
+faiss_index_path = current_file.parent.parent / "RAG" / "faiss_index_train_topics.bin"
+embeddings_json_path = current_file.parent.parent / "RAG" / "embeddings_dataset_train_topics.json"
+
+index = faiss.read_index(str(faiss_index_path))
+
+with open(str(embeddings_json_path), "r", encoding="utf-8") as f:
     metadata = json.load(f)
     
 def search_cosine_similarity(query_text, top_k=3):
@@ -44,7 +40,6 @@ def search_cosine_similarity(query_text, top_k=3):
     
     query_embedding_np = np.array([query_embedding], dtype=np.float32)
     faiss.normalize_L2(query_embedding_np)
-    
     
     distances, indices = index.search(query_embedding_np, top_k)
     
