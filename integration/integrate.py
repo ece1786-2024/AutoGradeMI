@@ -28,22 +28,50 @@ def process_essay(topic: str, essay: str, desired_score: float):
     """
     # Predicted score (from grader_agent)
     predicted_score = grader_agent.get_score_prompt_version_RAG(topic, essay)
-
-    # Feedback (from feedback_agent)
-    feedback = feedback_agent.generate_feedback(topic, essay, predicted_score, desired_score)
     
-    if feedback == "Failed to generate 'good' feedback within the turn limit. Please try again.":
-        sample_essay = "Sorry, we cannot generate a sample essay without a feedback. Please try again"
+    if predicted_score >= desired_score:
         
+        if predicted_score == 9.0:
+            feedback = "Great job! Your essay got full score. Keep up the good work!"
+            sample_essay = "Great job! Your are really good at English. Keep up the good work!"  
+            return {
+                "predicted_score": predicted_score,
+                "feedback": feedback,
+                "sample_essay": sample_essay
+            }
+            
+        else:
+            if predicted_score == 8.5:
+                desired_score = 9.0
+            else:
+                desired_score = predicted_score + 1.0  
+            feedback = feedback_agent.generate_feedback(topic, essay, predicted_score, desired_score)
+            if feedback == "Failed to generate 'good' feedback within the turn limit. Please try again.":
+                feedback = f"Great job! Your essay is already meet the desired score you want. But I failed to provide you with 'good' feedback to reach a score of {desired_score} within the turn limit.\n"
+                sample_essay = "Sorry, we cannot generate a sample essay without a feedback. Please try again"
+            else:
+                feedback_head = f"Great job! Your essay is already meet the desired score you want. But I still can try to provide you with feedback and a sample essay to reach a score of {desired_score}.\n"
+                feedback = feedback_head + feedback
+                for i in range(10):
+                    sample_essay = sample_agent.generate_sample_essay(topic, essay, feedback, predicted_score, desired_score)
+                    sample_score = grader_agent.get_score_prompt_version_RAG(topic, sample_essay)
+                    if float(sample_score) >= float(desired_score):
+                        break
+                    if i == 9:
+                        sample_essay = "Sorry, we cannot generate a sample essay that meets the desired score base on your essay. Please try again"
+    
     else:
-        # Sample essay (from sample_agent)
-        for i in range(10):
-            sample_essay = sample_agent.generate_sample_essay(topic, essay, feedback, predicted_score, desired_score)
-            sample_score = grader_agent.get_score_prompt_version_RAG(topic, sample_essay)
-            if float(sample_score) >= float(desired_score):
-                break
-            if i == 9:
-                sample_essay = "Sorry, we cannot generate a sample essay that meets the desired score base on your essay. Please try again"
+        feedback = feedback_agent.generate_feedback(topic, essay, predicted_score, desired_score)
+        if feedback == "Failed to generate 'good' feedback within the turn limit. Please try again.":
+            sample_essay = "Sorry, we cannot generate a sample essay without a feedback. Please try again"
+        else:
+            for i in range(10):
+                sample_essay = sample_agent.generate_sample_essay(topic, essay, feedback, predicted_score, desired_score)
+                sample_score = grader_agent.get_score_prompt_version_RAG(topic, sample_essay)
+                if float(sample_score) >= float(desired_score):
+                    break
+                if i == 9:
+                    sample_essay = "Sorry, we cannot generate a sample essay that meets the desired score base on your essay. Please try again"
         
     # Output grade
     if '<4' in predicted_score:
