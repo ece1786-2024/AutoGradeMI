@@ -3,9 +3,14 @@ import sys
 import pandas as pd
 from openai import OpenAI
 import numpy as np
+from pathlib import Path
 
-sys.path.append(os.path.abspath(".."))
-from Feedback_agent.rubric_and_sample import IELTS_rubrics as rubric
+current_file = Path(__file__).resolve()
+rubric_path = current_file.parent.parent / "Feedback_agent"
+sys.path.append(str(rubric_path))
+# sys.path.append(os.path.abspath(".."))
+from rubric_and_sample import IELTS_rubrics as rubric
+
 
 def get_score_prompt_version(topic, essay):
     client = OpenAI()
