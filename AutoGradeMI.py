@@ -22,19 +22,6 @@ def process_input(topic, essay, desired_score):
         return "Invalid Input", "The essay exceeds the maximum length of 400 words!", ""
 
     try:
-        processing_messages = [
-            "Inviting AI tutors...",
-            "AI tutors grading...",
-            "AI tutors thinking...",
-            "AI tutors hardworking...",
-            "AI tutors discussing...",
-            "AI tutors deciding..."
-        ]
-        
-        for message in processing_messages:
-            yield message, "", "" 
-            time.sleep(3)
-        
         results = inter.process_essay(topic, essay, desired_score)
         predicted_score = f"Predicted Score: {results['predicted_score']}"
         feedback = results["feedback"]
@@ -44,11 +31,9 @@ def process_input(topic, essay, desired_score):
         return "Error", f"An error occurred: {e}", ""
 
 # Define the Gradio interface
-my_theme1 = gr.Theme.from_hub('earneleh/paris')
-#my_theme2 = gr.Theme.from_hub('gstaff/xkcd')
-#my_theme3 = gr.Theme.from_hub('YTheme/Minecraft')
-#my_theme4 = gr.Theme.from_hub('NoCrypt/miku')
-with gr.Blocks(theme=my_theme1) as demo:
+my_theme = gr.Theme.from_hub('earneleh/paris')
+
+with gr.Blocks(theme=my_theme) as demo:
 
     with gr.Row():
         with gr.Column(scale=8):  
