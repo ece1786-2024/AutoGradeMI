@@ -95,7 +95,7 @@ def generate_feedback(topic, essay, predicted_score, desired_score):
             current_conversation = "\n".join(conversation)
 
             # Generator's turn
-            generator_response = get_response(generator_prompt, topic, essay, current_conversation)
+            generator_response = get_response(generator_prompt, topic, essay, predicted_score, desired_score, current_conversation)
             if generator_response in repetitive_responses:
                 log_file.write("Repetitive responses detected. Exiting loop.\n")
                 print("Repetitive responses detected. Exiting loop.")
@@ -106,7 +106,7 @@ def generate_feedback(topic, essay, predicted_score, desired_score):
 
             # Evaluator's turn
             current_conversation = "\n".join(conversation)
-            evaluator_response = get_response(evaluator_prompt, topic, essay, current_conversation)
+            evaluator_response = get_response(evaluator_prompt, topic, essay, predicted_score, desired_score, current_conversation)
             conversation.append(f"evaluator: {evaluator_response}")
             log_file.write(f"evaluator: {evaluator_response}\n")
 
