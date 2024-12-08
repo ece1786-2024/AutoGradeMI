@@ -1660,3 +1660,7 @@ model/trained_20/tokenizer.json
 model/trained_20/tokenizer_config.json
 model/trained_20/vocab.json
 Feedback_agent/rubric_and_sample/__pycache__/__init__.cpython-310.pyc
+Feedback_agent/integration/__pycache__/two_agent_Interaction_new_prompt.cpython-310.pyc
+integration/__pycache__/integrate.cpython-310.pyc
+Sample_Essay_Generator/__pycache__/grader.cpython-310.pyc
+Sample_Essay_Generator/__pycache__/sample_essay_generator.cpython-310.pyc
