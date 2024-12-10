@@ -60,7 +60,7 @@ RAG folder contains the algoritms for generating IELTS writing vector database u
 ![alt text](image-1.png)
 
 
-## Data Source Reference
+## Reference
 https://www.kaggle.com/datasets/japkeeratsingh/ielts-writing
 
 https://www.kaggle.com/datasets/mazlumi/ielts-writing-scored-essays-dataset
@@ -70,6 +70,11 @@ https://huggingface.co/datasets/chillies/IELTS-writing-task-2-evaluation/tree/ma
 https://huggingface.co/datasets/chillies/IELTS_essay_human_feedback/tree/main
 
 https://huggingface.co/datasets/chillies/IELTS_evaluations
+
+“Ielts writing band scores explained Australia,” IDP IELTS Australia, https://ielts.com.au/australia/results/ielts-band-scores/writing-band-score. 
+
+“Ielts writing band scores canada,” IDP IELTS Canada, https://ielts.idp.com/canada/results/scores/writing. 
+
 
 
 
