@@ -60,6 +60,15 @@ RAG folder contains the algoritms for generating IELTS writing vector database u
 ![alt text](image-1.png)
 
 
+## Data Source Reference
+https://www.kaggle.com/datasets/japkeeratsingh/ielts-writing
+https://www.kaggle.com/datasets/mazlumi/ielts-writing-scored-essays-dataset
+https://huggingface.co/datasets/chillies/IELTS-writing-task-2-evaluation/tree/main
+https://huggingface.co/datasets/chillies/IELTS_essay_human_feedback/tree/main
+https://huggingface.co/datasets/chillies/IELTS_evaluations
+
+
+
 
 
 
