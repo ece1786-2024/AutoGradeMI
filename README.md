@@ -6,10 +6,6 @@ This system is the project for ECE1786: Creative Application NLP offered at the 
 
 ![alt text](image.png)
 
-## System Overview and Architecture
-![alt text](image-2.png)
-![alt text](image-1.png)
-
 ## How to use AutoGradeMI
 ### ***1. Start Gradio Instance:***
 Run command: python ./AutoGradeMI.py
@@ -59,6 +55,9 @@ RAG folder contains the algoritms for generating IELTS writing vector database u
 
 ***./AutoGRADEMI.py:*** Frontend Program that powers the UI and links frontend and backend of the system
 
+## System Overview and Architecture
+![alt text](image-2.png)
+![alt text](image-1.png)
 
 
 
